@@ -1,0 +1,36 @@
+################################
+#           prompt             #
+# user : %n                    #
+# absolute path : %~           #
+# current dir : %.             #
+# color : [B] blue             #
+#         [K] black            #
+#         [R] red              #
+#         [G] green            #
+#         [Y] yellow           #
+#         [P] pink             #
+#         [L] light blue       #
+#         [N] normal           #
+#                              #
+#   **put it in ~/.42shrc **   #
+################################
+
+PROMPT='%n @ [G][%.] >>>'
+
+alias gc='gcc -Wall -Wextra -Werror'
+alias cg='clang -Wall -Wextra -Werror'
+alias q='exit'
+alias l='ls'
+alias ll='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias llh='ls -lh'
+alias llah='ls -lah'
+alias llha='ls -lah'
+alias llr='ls -lRa'
+alias v='vim'
+alias e='emacs'
+alias cp='cp -i'
+alias cpr='cp -R'
+alias mv='mv -i'
+alias gitp='git push origin master'
