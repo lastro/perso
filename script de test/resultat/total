@@ -1,0 +1,9 @@
+3 clients, 1 serveurs, 3 heures, messages de 1Ko:
+alib:
+14315266 aller-retours
+14315211 aller-retours
+14315452 aller-retours
+zeromq:
+145377170
+145536195
+145452043

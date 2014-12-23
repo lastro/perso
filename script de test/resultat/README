@@ -1,0 +1,4 @@
+ivy1: un serveur, un client, echange autant de message que possible, trois heures
+alib1: un serveur, 3 clients, echange autant de message que possible, trois heures
+zeromq1: un serveur, 3 clients, echange autant de message que possible, trois heures
+zeromq2: un serveur, 3 clients, echange autant de message que possible, une heure

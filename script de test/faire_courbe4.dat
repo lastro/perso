@@ -1,0 +1,28 @@
+# script pour faire un .xls pour tracer les courbes heure, ram used, swap used
+# fait par TL le 30.01.2014
+
+# parametre: nom du fichier top
+if [ $# -ne 1 ]
+then
+	echo "Usage: $0 <nom du fichier top>"
+	echo "Exemple: $0 top.170611.111001"
+	exit
+fi
+nomfictop=$1
+
+grep -e "^top - " -e "^Mem: " -e "^Swap: " $nomfictop >/tmp/courbe1
+for lignearobase in `cat /tmp/courbe1 | sed -e "s/ /@/g"`
+do
+	ligne=`echo $lignearobase | sed -e "s/@/ /g"`
+	premiermot=`echo $ligne | sed -e "s/ .*//"`
+#	echo "ligne $ligne premiermot $premiermot"
+	case $premiermot in
+	"top")     heure=`echo $ligne | sed -e "s/^top - //" | sed -e "s/ .*//"`;;
+	"Mem:")    memutil=`echo $ligne | sed -e "s/.*total,  *//" | sed -e "s/k .*//"`;;
+	"Swap:")   swaputil=`echo $ligne | sed -e "s/.*total,  *//" | sed -e "s/k .*//"`
+	           echo "$heure	$memutil	$swaputil"
+	esac
+done
+
+rm -f /tmp/courbe?
+

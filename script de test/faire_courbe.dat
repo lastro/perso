@@ -1,0 +1,29 @@
+# script pour faire un .xls pour tracer les courbes heure, CPU, memoire, nb processus
+# fait par TL le 20.10.2011
+
+# parametre: nom du fichier top
+if [ $# -ne 1 ]
+then
+	echo "Usage: $0 <nom du fichier top>"
+	echo "Exemple: $0 top.170611.111001"
+	exit
+fi
+nomfictop=$1
+
+grep -e "^top - " -e "Tasks: " -e "Cpu(s): " -e "Mem: " $nomfictop >/tmp/courbe1
+for lignearobase in `cat /tmp/courbe1 | sed -e "s/ /@/g"`
+do
+	ligne=`echo $lignearobase | sed -e "s/@/ /g"`
+	premiermot=`echo $ligne | sed -e "s/ .*//"`
+#	echo "ligne $ligne premiermot $premiermot"
+	case $premiermot in
+	"top")     heure=`echo $ligne | sed -e "s/^top - //" | sed -e "s/ .*//"`;;
+	"Tasks:")  nbprocess=`echo $ligne | sed -e "s/^Tasks: //" | sed -e "s/ .*//"`;;
+	"Cpu(s):") pourcidle=`echo $ligne | sed -e "s/.*%ni,  *//" | sed -e "s/%id.*//"`;;
+	"Mem:")    memlibre=`echo $ligne | sed -e "s/.*used,  *//" | sed -e "s/k .*//"`
+	           echo "$heure	$nbprocess	$pourcidle	$memlibre"
+	esac
+done
+
+rm -f /tmp/courbe?
+

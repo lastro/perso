@@ -1,0 +1,29 @@
+# script pour faire un .xls pour tracer les courbes heure et conso CPU d'un process
+# fait par TL le 28.01.2014
+
+# parametres: nom du fichier top, pid du process
+if [ $# -ne 2 ]
+then
+	echo "Usage: $0 <nom du fichier top>"
+	echo "Exemple: $0 top.170611.111001"
+	exit
+fi
+nomfictop=$1
+pidproc=$2
+
+grep -e "^top - " -e "^ *$pidproc " $nomfictop >/tmp/courbe1
+cat /tmp/courbe1
+for lignearobase in `cat /tmp/courbe1 | sed -e "s/ /@/g"`
+do
+	ligne=`echo $lignearobase | sed -e "s/@/ /g"`
+	premiermot=`echo $ligne | sed -e "s/ .*//"`
+#	echo "ligne $ligne premiermot $premiermot"
+	case $premiermot in
+	"top")     heure=`echo $ligne | sed -e "s/^top - //" | sed -e "s/ .*//"`;;
+	*)         conso=`echo $ligne | sed -e "s/^ *//" | sed -e "s/  */@1/" | sed -e "s/  */@2/" | sed -e "s/  */@3/" | sed -e "s/  */@4/" | sed -e "s/  */@5/" | sed -e "s/  */@6/" | sed -e "s/  */@7/" | sed -e "s/  */@8/" | sed -e "s/.*@8//" | sed -e "s/ .*//"`
+	           echo "$heure	$conso"
+	esac
+done
+
+rm -f /tmp/courbe?
+

@@ -1,0 +1,2 @@
+sleep $1
+timeout3 -t $2 top -b -d10 -u tlp

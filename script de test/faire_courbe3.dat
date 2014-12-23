@@ -1,0 +1,31 @@
+# script pour faire un .xls pour tracer les courbes heure, CPU, memoire, nb processus, CPU d'un process (dataserver par exemple)
+# fait par TL le 20.10.2011
+
+# parametre: nom du fichier top, pid du process
+if [ $# -ne 2 ]
+then
+	echo "Usage: $0 <nom du fichier top> <pid du processus a observer>"
+	echo "Exemple: $0 top.170611.111001 5424"
+	exit
+fi
+nomfictop=$1
+pidproc=$2
+
+grep -e "^top - " -e "Tasks: " -e "Cpu(s): " -e "Mem: " -e "^ *$pidproc " $nomfictop >/tmp/courbe1
+for lignearobase in `cat /tmp/courbe1 | sed -e "s/ /@/g"`
+do
+	ligne=`echo $lignearobase | sed -e "s/@/ /g"`
+	premiermot=`echo $ligne | sed -e "s/ .*//"`
+#	echo "ligne $ligne premiermot $premiermot"
+	case $premiermot in
+	"top")     heure=`echo $ligne | sed -e "s/^top - //" | sed -e "s/ .*//"`;;
+	"Tasks:")  nbprocess=`echo $ligne | sed -e "s/^Tasks: //" | sed -e "s/ .*//"`;;
+	"Cpu(s):") pourcidle=`echo $ligne | sed -e "s/.*%ni,  *//" | sed -e "s/%id.*//"`;;
+	"Mem:")    memlibre=`echo $ligne | sed -e "s/.*used,  *//" | sed -e "s/k .*//"`;;
+	*)         conso=`echo $ligne | sed -e "s/^ *//" | sed -e "s/  */@1/" | sed -e "s/  */@2/" | sed -e "s/  */@3/" | sed -e "s/  */@4/" | sed -e "s/  */@5/" | sed -e "s/  */@6/" | sed -e "s/  */@7/" | sed -e "s/  */@8/" | sed -e "s/.*@8//" | sed -e "s/ .*//"`
+	           echo "$heure	$nbprocess	$pourcidle	$memlibre	$conso"
+	esac
+done
+
+rm -f /tmp/courbe?
+
